@@ -6,7 +6,7 @@ import FileUtilities._
 /**
  *  Based on code from Yasushi Abe's http://github.com/Yasushi/sbt-scalate-compiler
  */ 
-trait ScalatePlugin extends DefaultWebProject {
+trait ScalatePlugin extends BasicScalaProject with MavenStyleScalaPaths {
 
   def templateRoots             = (mainSourcePath / "templates")##
   def generatedDirectory        = outputRootPath / "gen"
