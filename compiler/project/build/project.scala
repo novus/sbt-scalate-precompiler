@@ -2,8 +2,9 @@ import sbt._
 
 class PrecompilerProject(info: ProjectInfo) extends DefaultProject(info) {
 
-  val scalate_core = "org.fusesource.scalate"  % "scalate-core"  % "1.3.2"
-  val scalate_util = "org.fusesource.scalate"  % "scalate-util"  % "1.3.2"
+  val ScalateVersion = "1.4.1"
+  val scalate_core = "org.fusesource.scalate"  % "scalate-core"  % ScalateVersion
+  val scalate_util = "org.fusesource.scalate"  % "scalate-util"  % ScalateVersion
   val slf4j        = "org.slf4j"               % "slf4j-jdk14"   % "1.6.1"
 
   override def mainClass = Some("pragmagica.scalate.Precompiler")
