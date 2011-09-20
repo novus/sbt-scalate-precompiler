@@ -1,5 +1,11 @@
 sbtPlugin := true
 
+organization := "com.novus"
+
+name := "sbt-scalate-precompiler"
+
+version := "0.1.0"
+
 resolvers ++= Seq(
   "Novus Snapshots Repository" at "http://repo.novus.com/snapshots/",
   "Novus Snapshots Releases" at "http://repo.novus.com/releases/"
