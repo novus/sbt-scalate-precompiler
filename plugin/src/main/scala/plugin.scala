@@ -1,35 +1,39 @@
-package pragmagica.scalate.plugin
-
 import sbt._
-import FileUtilities._
+import Keys._
+
+import java.io.File
 
 /**
- *  Based on code from Yasushi Abe's http://github.com/Yasushi/sbt-scalate-compiler
- */ 
-trait ScalatePlugin extends BasicScalaProject with MavenStyleScalaPaths {
+  inConfig(ScalatePlugin.Scalate)(
+    (sourceGenerators in Compile) <+= ScalatePlugin.precompile map { x => x :: Nil }
+  )
+*/
 
-  def templateRoots             = (mainSourcePath / "templates")##
-  def generatedDirectory        = outputRootPath / "gen"
-  def importsFile               = mainResourcesPath / "scalate_imports.txt"
-
-  override def mainSourceRoots  = super.mainSourceRoots +++ (generatedDirectory##)
-  override def watchPaths       = super.watchPaths      +++ (templateRoots***) --- (generatedDirectory***)
-
-  override def compileAction    = super.compileAction dependsOn(precompileScalateAction)
-
-  lazy val precompileScalate = precompileScalateAction
-  def precompileScalateAction = {
-    val depPath = info.parent match {
-      case Some(p) => p.info.pluginsManagedDependencyPath
-      case _ => info.pluginsManagedDependencyPath
-    }
-    task {createDirectory(generatedDirectory, log)} && 
-    runTask(
-      Some("pragmagica.scalate.Generator"),                               //main class
-      depPath ** "*.jar",                                                 //classpath
-      Seq(generatedDirectory.absolutePath, importsFile.absolutePath) ++ templateRoots.getPaths      //options
+object ScalatePlugin extends Plugin {
+  
+  object scalate {
+    val Scalate             = config("scalate") extend(Compile)
+    val importsFile         = SettingKey[Option[File]]  ("imports-file", "Imports inserted into compiled template.")
+    val generatedDirectory  = SettingKey[File]          ("generated-directory", "Output directory for precompiled templates.")
+    val templateRoots       = SettingKey[Seq[File]]     ("template-roots", "Directorires containing Scalate templates.")
+    val precompile          = TaskKey[File]             ("precompile", "Precompile Scalate templates.")
+  
+    lazy val settings = Seq(
+      templateRoots       <<= (resourceDirectory in Compile) { _  / "templates" :: Nil },
+      importsFile         <<= (resourceDirectory in Compile) { rd => Some(rd / "imports.txt") },
+      generatedDirectory  <<= (sourceManaged in Compile) { x => x },
+      precompile          <<= (sourceManaged, templateRoots, importsFile) map {
+        (g, roots, imports) => precompileScalate(g, roots, imports.get)
+      }
     )
   }
-
+  
+  def precompileScalate(output: File, templateRoots: Seq[File], imports: File) = {
+    try {
+      pragmagica.scalate.Generator.precompile(templateRoots.map(_.toString).toList, output.toString, imports.toString)
+    } catch {
+      case e => e.printStackTrace()
+    }
+    output
+  }
 }
- 
