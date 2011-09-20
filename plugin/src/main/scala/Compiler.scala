@@ -28,8 +28,7 @@ object Generator {
 
   }
 
-  def precompile(sources:List[String], out:String, importsPath: String) {
-
+  def precompile(sources:List[String], out:String, importsPath: String) = {
     val output = new File(out)
     output.mkdirs()
 
@@ -39,6 +38,8 @@ object Generator {
     val imports = Source.fromInputStream(new FileInputStream(new File(importsPath))).getLines.toList
     engine.importStatements = engine.importStatements ::: imports ::: Nil
 
+    val compiled = collection.mutable.ListBuffer[File]()
+    
     for( source <- sources ) {
 
       val paths = find(source, engine.codeGenerators.keySet)
@@ -46,19 +47,21 @@ object Generator {
       for( file <- paths ) {
 
         val uri = buildUri(source,file)
-
-        logger.debug( "Generating source for "+file+" and with uri " + uri )
-
-        val code = engine.generateScala(TemplateSource.fromFile(file,uri), Nil)
+        println( "Generating source for "+file+" and with uri " + uri )
+        
+        val src = TemplateSource.fromFile(file,uri)
+        src.engine = engine
+        val code = engine.generateScala(src, Nil)
         val sourceFile  = new File(output, sourceName(source, file))
 
         logger.debug( "Generating source in "+ sourceFile )
         sourceFile.getParentFile.mkdirs
         IOUtil.writeBinaryFile(sourceFile, code.source.getBytes("UTF-8"))
-              
+        compiled += sourceFile
       }
     }
 
+    compiled.toList
   }
 
   private def sourceName( source:String, file:File ) = 
@@ -92,7 +95,3 @@ object Generator {
 
 
 }
-
-
-
-  
