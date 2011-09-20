@@ -1,6 +1,0 @@
-
-<p>
-  <%= List("hi", "there", "reader!").mkString(" ") %>
-  ${ "yo "+(3+4) } 
-</p>
-
