@@ -66,10 +66,9 @@ object Generator {
 
   private def sourceName( source:String, file:File ) = 
     file.getParent.replace(stripSlash(source),"")+"/"+ file.getName+".scala"
-      //.replaceAll("""\..*""","")
 
   private def buildUri( source:String, file:File ) = 
-    file.getParent .replace(stripSlash(source),"")+"/"+file.getName
+    file.getParent.replace(stripSlash(source),"")+"/"+file.getName
 
   private def stripSlash(path:String) = 
     if(path.endsWith("/")) path.take(path.size-1)

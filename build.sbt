@@ -4,7 +4,7 @@ organization := "com.novus"
 
 name := "sbt-scalate-precompiler"
 
-version := "0.1.1-SNAPSHOT"
+version := "0.1.2-SNAPSHOT"
 
 resolvers ++= Seq(
   "Novus Snapshots Repository" at "http://repo.novus.com/snapshots/",
@@ -13,5 +13,5 @@ resolvers ++= Seq(
 
 libraryDependencies ++= Seq(
   "org.slf4j" % "slf4j-jdk14" % "1.6.1",
-  "org.fusesource.scalate" % "scalate-core" % "1.4.1"
+  "org.fusesource.scalate" % "scalate-core" % "1.5.3"
 )
