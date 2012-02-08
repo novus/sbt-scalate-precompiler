@@ -14,7 +14,7 @@ import java.io.File
 
 object ScalatePlugin extends Plugin {
   
-  val Scalate             = config("scalate")
+  val Scalate             = config("scalate") extend (Compile)
   
   object scalateSettings {
     val importsFile         = SettingKey[Option[File]]  ("imports-file", "Imports inserted into compiled template.") in Scalate
