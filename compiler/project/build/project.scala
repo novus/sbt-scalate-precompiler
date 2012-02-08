@@ -9,8 +9,9 @@ class PrecompilerProject(info: ProjectInfo) extends DefaultProject(info) {
 
   override def mainClass = Some("pragmagica.scalate.Precompiler")
   override def managedStyle = ManagedStyle.Maven
-  val publishTo = Resolver.sftp("repobum", "repobum", "/home/public/%s".format(
+
+  val publishTo = Resolver.sftp("repo.novus.com", "repo.novus.com", "/nv/repo/%s".format(
     if (projectVersion.value.toString.endsWith("-SNAPSHOT")) "snapshots"
     else "releases"
-  )) as("repobum_repobum", new java.io.File(Path.userHome + "/.ssh/repobum"))
+  )) as (System.getProperty("user.name"))
 }
