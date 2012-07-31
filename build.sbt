@@ -4,7 +4,7 @@ organization := "com.novus"
 
 name := "sbt-scalate-precompiler"
 
-version := "0.1.2-SNAPSHOT"
+version := "0.1.3-SNAPSHOT"
 
 resolvers ++= Seq(
   "Novus Snapshots Repository" at "http://repo.novus.com/snapshots/",
@@ -17,7 +17,7 @@ libraryDependencies ++= Seq(
 )
 
 publishTo <<= (version) { version: String =>
-  val r = Resolver.sftp("repo.novus.com", "repo.novus.com", "/nv/repo/%s".format(
+  val r = Resolver.sftp("nexus.plat", "nexus.plat", "/nv/repo/%s".format(
     if (version.trim().toString.endsWith("-SNAPSHOT")) "snapshots" else "releases"
     )) as (System.getProperty("user.name"))
   Some(r)
