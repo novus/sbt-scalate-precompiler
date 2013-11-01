@@ -17,10 +17,13 @@ libraryDependencies ++= Seq(
 )
 
 publishTo <<= (version) { version: String =>
-  val r = Resolver.sftp("nexus.plat", "nexus.plat", "/nv/repo/%s".format(
-    if (version.trim().toString.endsWith("-SNAPSHOT")) "snapshots" else "releases"
-    )) as (System.getProperty("user.name"))
-  Some(r)
+  val sfx =
+    if(version.trim.endsWith("SNAPSHOT"))
+      "snapshots"
+    else
+      "releases"
+    val nexus = "https://nexus.novus.com:65443/nexus/content/repositories/"
+    Some("Novus " + sfx at nexus + sfx + "/")
 }
 
 credentials += Credentials(Path.userHome / ".ivy2" / ".novus_nexus")
